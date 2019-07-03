@@ -16,7 +16,7 @@ class NodeEnv(gym.Env):
         self.n_action = sub.number_of_nodes()
         self.sub = copy.deepcopy(sub)
         self.action_space = spaces.Discrete(self.n_action)
-        self.observation_space = spaces.Box(low=0, high=1, shape=(self.n_action, 6), dtype=np.float32)
+        self.observation_space = spaces.Box(low=0, high=1, shape=(self.n_action, 7), dtype=np.float32)
         self.state = None
         self.actions = []
         self.degree = []
@@ -31,10 +31,6 @@ class NodeEnv(gym.Env):
         self.be = []
         for s in nx.betweenness_centrality(sub).values():
             self.be.append(s)
-        cpu_all = []
-        for u in range(self.n_action):
-            cpu_all.append(self.sub.nodes[u]['cpu'])
-        self.cpu_all = (cpu_all - np.min(cpu_all)) / (np.max(cpu_all) - np.min(cpu_all))
         self.vnr = None
 
     def set_sub(self, sub):
@@ -65,8 +61,7 @@ class NodeEnv(gym.Env):
         bw_all_remain = (bw_all_remain - np.min(bw_all_remain)) / (np.max(bw_all_remain) - np.min(bw_all_remain))
         avg_dst = (avg_dst - np.min(avg_dst)) / (np.max(avg_dst)-np.min(avg_dst))
 
-        self.state = (self.cpu_all,
-                      cpu_remain,
+        self.state = (cpu_remain,
                       bw_all_remain,
                       self.degree,
                       avg_dst,
@@ -87,8 +82,7 @@ class NodeEnv(gym.Env):
         cpu_remain = (cpu_remain - np.min(cpu_remain)) / (np.max(cpu_remain) - np.min(cpu_remain))
         bw_all_remain = (bw_all_remain - np.min(bw_all_remain)) / (np.max(bw_all_remain) - np.min(bw_all_remain))
         avg_dst = np.zeros(self.n_action).tolist()
-        self.state = (self.cpu_all,
-                      cpu_remain,
+        self.state = (cpu_remain,
                       bw_all_remain,
                       self.degree,
                       avg_dst,

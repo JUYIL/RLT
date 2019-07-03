@@ -188,13 +188,10 @@ class Algorithm:
 
     def link_mapping(self, sub, req, node_map):
 
-        if self.name=="GRC":
-            # 剪枝后再寻最短路径
-            link_map = Network.cut_then_find_path(sub, req, node_map)
-        elif self.name == "RLNL":
+        if self.name == "RLNL":
             link_map = self.agent.run(sub, req, node_map, self.link_env)
         else:
             # K最短路径
-            link_map = Network.find_path(sub, req, node_map)
+            link_map = Network.cut_then_find_path(sub, req, node_map)
 
         return link_map

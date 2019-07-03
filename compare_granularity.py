@@ -5,7 +5,7 @@ from analysis import Analysis
 if __name__ == '__main__':
 
     tool = Analysis('results_granularity/')
-    for i in range(3):
+    for i in range(1,3):
         granularity = i + 1
         algorithm = Algorithm('RLN%d' % granularity,
                               param=10,)

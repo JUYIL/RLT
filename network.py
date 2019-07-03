@@ -202,9 +202,9 @@ class Network:
             sn_from = node_map[vn_from]
             sn_to = node_map[vn_to]
             if nx.has_path(sub, source=sn_from, target=sn_to):
-                for path in nx.all_shortest_paths(sub, sn_from, sn_to):
-                    if Network.get_path_capacity(sub, path) >= req[vn_from][vn_to]['bw']:
-                        link_map.update({vLink: path})
+                for path in Network.k_shortest_path(sub, sn_from, sn_to):
+                    if Network.get_path_capacity(sub,path) >= req[vn_from][vn_to]['bw']:
+                        link_map.update({vLink:path})
                         # 这里的资源分配是暂时的
                         start = path[0]
                         for end in path[1:]:
@@ -214,8 +214,6 @@ class Network:
                         break
                     else:
                         continue
-
-        # 返回链路映射集合
         return link_map
 
     @staticmethod

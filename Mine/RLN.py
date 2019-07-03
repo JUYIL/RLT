@@ -77,7 +77,7 @@ class RLN:
 
                     if len(node_map) == req.number_of_nodes():
 
-                        link_map = Network.find_path(sub_copy, req, node_map)
+                        link_map = Network.cut_then_find_path(sub_copy, req, node_map)
                         reward = Evaluation.revenue_to_cost_ratio(req, link_map)
 
                         if reward != -1:
