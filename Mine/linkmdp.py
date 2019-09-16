@@ -20,6 +20,10 @@ class LinkEnv(gym.Env):
         btn = Network.getbtns(sub)
         self.btn = []
         self.btn = (btn - np.min(btn)) / (np.max(btn) - np.min(btn))
+        self.mbw_remain=[]
+        for paths in self.linkpath.values():
+            path = list(paths.values())[0]
+            self.mbw_remain.append(Network.get_path_capacity(self.sub, path))
 
     def set_sub(self, sub):
         self.sub = copy.deepcopy(sub)
@@ -31,21 +35,20 @@ class LinkEnv(gym.Env):
         self.link=link
 
     def step(self, action):
-        mbw_remain = []
         thepath = list(self.linkpath[action].values())[0]
 
+        path_remain_bw=[]
         i = 0
         while i < len(thepath) - 1:
             fr = thepath[i]
             to = thepath[i + 1]
             self.sub[fr][to]['bw_remain'] -= self.vnr[self.link[0]][self.link[1]]['bw']
+            path_remain_bw.append(self.sub[fr][to]['bw_remain'])
             i += 1
 
-        for paths in self.linkpath.values():
-            path = list(paths.values())[0]
-            mbw_remain.append(Network.get_path_capacity(self.sub, path))
-        mbw_remain = (mbw_remain - np.min(mbw_remain)) / (
-                np.max(mbw_remain) - np.min(mbw_remain))
+        self.mbw_remain[action]=min(path_remain_bw)
+        mbw_remain = (self.mbw_remain - np.min(self.mbw_remain)) / (
+                np.max(self.mbw_remain) - np.min(self.mbw_remain))
 
         self.state = (mbw_remain, self.btn)
 

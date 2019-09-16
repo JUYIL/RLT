@@ -8,7 +8,7 @@ if __name__ == '__main__':
     name = 'RLNL'
     algorithm = Algorithm(name, param=5)
     runtime = algorithm.execute(network_path='networks/',
-                                sub_filename='subts.txt',
+                                sub_filename='subsj.txt',
                                 req_num=2000)
     tool.save_evaluations(algorithm.evaluation, '%s.txt' % name)
     print(runtime)
